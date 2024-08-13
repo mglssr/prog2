@@ -29,6 +29,7 @@ TPersona crearTPersona(int cedula, const char nombre[MAX_NOMBRE], char apellido[
 void nombrePersona(TPersona persona, char nombre[MAX_NOMBRE]){
     /************ Parte 4.3 ************/
     /*Escriba el código a continuación */
+    strcpy(nombre, persona->nom);
 
     /****** Fin de parte Parte 4.3 *****/
 }
@@ -37,7 +38,7 @@ void nombrePersona(TPersona persona, char nombre[MAX_NOMBRE]){
 void apellidoPersona(TPersona persona, char apellido[MAX_APELLIDO]){
     /************ Parte 4.3 ************/
     /*Escriba el código a continuación */
-
+    strcpy(apellido, persona->ape);
     /****** Fin de parte Parte 4.3 *****/
 }
 
@@ -46,6 +47,7 @@ void apellidoPersona(TPersona persona, char apellido[MAX_APELLIDO]){
 void liberarTPersona(TPersona &persona){
     /************ Parte 4.3 ************/
     /*Escriba el código a continuación */
+    liberarTFecha(persona->fech_nac);
     delete persona;
     persona = NULL;
     /****** Fin de parte Parte 4.3 *****/
@@ -56,7 +58,7 @@ int cedulaTPersona(TPersona persona){
     int cedula = 0;
 	/************ Parte 4.4 ************/
     /*Escriba el código a continuación */
-
+    cedula = persona->ced;
     /****** Fin de parte Parte 4.4 *****/
 	return cedula;
 }
@@ -66,7 +68,7 @@ TFecha fechaNacimientoTPersona(TPersona persona){
     TFecha fecha = NULL;
 	/************ Parte 4.4 ************/
     /*Escriba el código a continuación */
-
+    fecha = persona->fech_nac;
     /****** Fin de parte Parte 4.4 *****/
 	return fecha;
 }
@@ -87,7 +89,7 @@ bool esMasJoven(TPersona persona1, TPersona persona2){
     bool masJoven = false;
 	/************ Parte 4.6 ************/
     /*Escriba el código a continuación */
-
+    masJoven = (compararTFechas(persona1->fech_nac, persona2->fech_nac) == 1);
     /****** Fin de parte Parte 4.6 *****/
 	return masJoven;
 }
