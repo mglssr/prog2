@@ -30,17 +30,16 @@ void agregarAGrupo(TGrupo& grupo, TPersona persona){
         }
         else{
             i = 0;
-            while ((!masjoven) || (i < grupo->tope))
+            while ((!masjoven) && (i < grupo->tope))
             {
                 masjoven = esMasJoven(grupo->personas[i], persona);
                 i++;
             };
             grupo->tope++;
-            
-            for (j = grupo->tope; (j > i); j--){
-                grupo->personas[j] = grupo->personas[j-1];
-            }
-            
+
+                for (j = (grupo->tope - 1); (j > i); j--){
+                    grupo->personas[j] = grupo->personas[j-1];
+                }
             grupo->personas[i] = persona;
         }
     }
@@ -60,9 +59,9 @@ void imprimirTGrupo(TGrupo grupo){
 // Recibe una referencia a un elemento de tipo TGrupo y libera su memoria
 // Libera además la memoria de cada una de las personas en el grupo
 void liberarTGrupo(TGrupo& grupo){
-    // for (int i = 0; (i <= grupo->tope); i++){
-    //     liberarTPersona(grupo->personas[i]);
-    // }
+    for (int i = 0; (i < grupo->tope); i++){
+        liberarTPersona(grupo->personas[i]);
+    }
     
     delete grupo;
     grupo = NULL;
