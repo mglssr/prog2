@@ -1,7 +1,9 @@
 #include "../include/clientesABB.h"
 
 struct rep_clientesABB {
-    
+    TCliente cliente;
+    TClientesABB der;
+    TClientesABB izq;
 };
 
 
