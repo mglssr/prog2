@@ -15,10 +15,6 @@ TCarritoProductos crearCarritoProductosVacio(){
 // Función para agregar un producto a un carrito de productos.
 // Inserta el producto en el carrito, ordenado de menor a mayor por ID producto.
 void insertarProductoCarritoProductos(TCarritoProductos &carritoProductos, TProducto producto){
-    //if (carritoProductos == NULL){
-      //  TCarritoProductos nuevo = crearCarritoProductosVacio();
-        //nuevo->producto = producto;
-        //nuevo->sig = NULL;
     
     if (carritoProductos == NULL){
         TCarritoProductos nuevo = new rep_carritoProductos;
@@ -120,10 +116,6 @@ void removerProductoCarritoProductos(TCarritoProductos &carritoProductos, int id
             prev->sig = actual->sig;
             liberarTProducto(actual->producto);
             delete(actual);
-            //actual->sig = actual->sig->sig;
-            //next->sig = NULL;
-            //liberarTProducto(next->producto);
-            //delete();
         }
         else{
             prev->sig = NULL;
