@@ -105,35 +105,63 @@ TCliente maxIdTClienteTClientesABB(TClientesABB clientesABB){
 }
 
 void removerTClienteTClientesABB(TClientesABB &clientesABB, int idCliente){
+    TClientesABB aux;
     if (clientesABB != NULL){
-        if (idCliente < idTCliente(clientesABB->cliente)){
-            removerTClienteTClientesABB(clientesABB->izquierdo, idCliente);
-        }
-        else if (idCliente > idTCliente(clientesABB->cliente)){
-            removerTClienteTClientesABB(clientesABB->derecho, idCliente);
-        }
-        else{
-            if (clientesABB->derecho == NULL){
-                TClientesABB borrarn = clientesABB;
-                clientesABB = clientesABB->izquierdo;
-                liberarnodo(borrarn);
-            }
-            else if (clientesABB->izquierdo == NULL){
-                TClientesABB borrarn = clientesABB;
+        if(idTCliente(clientesABB->cliente) == idCliente){
+            if (clientesABB->izquierdo == NULL){
+                aux = clientesABB;
                 clientesABB = clientesABB->derecho;
-                liberarnodo(borrarn);
+                liberarnodo(aux);
             }
-            else if (clientesABB->derecho != NULL && clientesABB->izquierdo != NULL){
-                TCliente mayor = maxIdTClienteTClientesABB(clientesABB->izquierdo);
-                clientesABB->cliente = mayor;
-                removerTClienteTClientesABB(clientesABB->izquierdo, idTCliente(mayor));
+            else if (clientesABB->derecho == NULL){
+                aux = clientesABB;
+                clientesABB = clientesABB->izquierdo;
+                liberarnodo(aux);
+            }
+            else if (clientesABB->izquierdo != NULL && clientesABB->derecho != NULL){
+                clientesABB->cliente = maxIdTClienteTClientesABB(clientesABB->izquierdo);
+                removerTClienteTClientesABB(clientesABB->izquierdo, idTCliente(clientesABB->cliente));
             }
             else{
                 liberarnodo(clientesABB);
             }
         }
+        else if(idCliente < idTCliente(clientesABB->cliente)){
+            removerTClienteTClientesABB(clientesABB->izquierdo, idCliente);
+        }
+        else{
+            removerTClienteTClientesABB(clientesABB->derecho, idCliente);
+        }
     }
 }
+        //if (idCliente < idTCliente(clientesABB->cliente)){
+           // removerTClienteTClientesABB(clientesABB->izquierdo, idCliente);
+        //}
+        //else if (idCliente > idTCliente(clientesABB->cliente)){
+            // removerTClienteTClientesABB(clientesABB->derecho, idCliente);
+        // }
+        // else{
+            // if (clientesABB->derecho == NULL){
+                // lientesABB borrarn = clientesABB;
+    //             clientesABB = clientesABB->izquierdo;
+    //             liberarnodo(borrarn);
+    //         }
+    //         else if (clientesABB->izquierdo == NULL){
+    //             TClientesABB borrarn = clientesABB;
+    //             clientesABB = clientesABB->derecho;
+    //             liberarnodo(borrarn);
+    //         }
+    //         else if (clientesABB->derecho != NULL && clientesABB->izquierdo != NULL){
+    //             TCliente mayor = maxIdTClienteTClientesABB(clientesABB->izquierdo);
+    //             clientesABB->cliente = mayor;
+    //             removerTClienteTClientesABB(clientesABB->izquierdo, idTCliente(mayor));
+    //         }
+    //         else{
+    //             liberarnodo(clientesABB);
+    //         }
+    //     }
+    // }
+
 
 int cantidadClientesTClientesABB(TClientesABB clientesABB){
     return 0;
