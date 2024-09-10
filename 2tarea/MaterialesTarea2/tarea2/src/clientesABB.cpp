@@ -32,7 +32,8 @@ void imprimirTClientesABB(TClientesABB clientesABB){
     }
 }
 
-void liberarnodo(TClientesABB nodo){
+//funcion auxiliar
+void liberarnodo(TClientesABB &nodo){
     liberarTCliente(nodo->cliente);
     delete(nodo);
     nodo = NULL;
@@ -41,10 +42,8 @@ void liberarnodo(TClientesABB nodo){
 void liberarTClientesABB(TClientesABB &clientesABB){
     if (clientesABB != NULL){
         liberarTClientesABB(clientesABB->izquierdo);
-        liberarnodo(clientesABB);
         liberarTClientesABB(clientesABB->derecho);
-        delete clientesABB;
-        clientesABB = NULL;
+        liberarnodo(clientesABB);
     }
 }
 
@@ -53,8 +52,11 @@ bool existeTClienteTClientesABB(TClientesABB clientesABB, int idCliente){
         if (idTCliente(clientesABB->cliente) == idCliente){
             return true;
         }
-        else {
-            return(existeTClienteTClientesABB(clientesABB->izquierdo, idCliente) || existeTClienteTClientesABB(clientesABB->derecho, idCliente));
+        else if(idCliente < idTCliente(clientesABB->cliente)){
+            return existeTClienteTClientesABB(clientesABB->izquierdo, idCliente);
+        }
+        else if(idCliente > idTCliente(clientesABB->cliente)){
+            return existeTClienteTClientesABB(clientesABB->derecho, idCliente);
         }
     }
     return false;
@@ -103,22 +105,26 @@ TCliente maxIdTClienteTClientesABB(TClientesABB clientesABB){
 
 void removerTClienteTClientesABB(TClientesABB &clientesABB, int idCliente){
     if(idTCliente(clientesABB->cliente) == idCliente){
-        if (clientesABB->izquierdo == NULL && clientesABB->derecho != NULL){
+        liberarTCliente(clientesABB->cliente);
+        if (clientesABB->izquierdo == NULL && clientesABB->derecho == NULL){
+            delete clientesABB;
+            clientesABB = NULL;
+        }
+        else if (clientesABB->izquierdo == NULL && clientesABB->derecho != NULL){
             TClientesABB aux = clientesABB;
             clientesABB = clientesABB->derecho;
-            liberarnodo(aux);
+            delete aux;
+            aux = NULL;
         }
         else if (clientesABB->derecho == NULL && clientesABB->izquierdo != NULL){
             TClientesABB aux = clientesABB;
             clientesABB = clientesABB->izquierdo;
-            liberarnodo(aux);
-        }
-        else if (clientesABB->izquierdo != NULL && clientesABB->derecho != NULL){
-            clientesABB->cliente = copiarTCliente(maxIdTClienteTClientesABB(clientesABB->izquierdo));
-            removerTClienteTClientesABB(clientesABB->izquierdo, idTCliente(clientesABB->cliente));
+            delete aux;
+            aux = NULL;
         }
         else{
-            liberarnodo(clientesABB);
+            clientesABB->cliente = copiarTCliente(maxIdTClienteTClientesABB(clientesABB->izquierdo));
+            removerTClienteTClientesABB(clientesABB->izquierdo, idTCliente(clientesABB->cliente));
         }
     }
     else if(idCliente < idTCliente(clientesABB->cliente)){
@@ -129,34 +135,6 @@ void removerTClienteTClientesABB(TClientesABB &clientesABB, int idCliente){
     }
 
 }
-        //if (idCliente < idTCliente(clientesABB->cliente)){
-           // removerTClienteTClientesABB(clientesABB->izquierdo, idCliente);
-        //}
-        //else if (idCliente > idTCliente(clientesABB->cliente)){
-            // removerTClienteTClientesABB(clientesABB->derecho, idCliente);
-        // }
-        // else{
-            // if (clientesABB->derecho == NULL){
-                // lientesABB borrarn = clientesABB;
-    //             clientesABB = clientesABB->izquierdo;
-    //             liberarnodo(borrarn);
-    //         }
-    //         else if (clientesABB->izquierdo == NULL){
-    //             TClientesABB borrarn = clientesABB;
-    //             clientesABB = clientesABB->derecho;
-    //             liberarnodo(borrarn);
-    //         }
-    //         else if (clientesABB->derecho != NULL && clientesABB->izquierdo != NULL){
-    //             TCliente mayor = maxIdTClienteTClientesABB(clientesABB->izquierdo);
-    //             clientesABB->cliente = mayor;
-    //             removerTClienteTClientesABB(clientesABB->izquierdo, idTCliente(mayor));
-    //         }
-    //         else{
-    //             liberarnodo(clientesABB);
-    //         }
-    //     }
-    // }
-
 
 int cantidadClientesTClientesABB(TClientesABB clientesABB){
     return 0;
