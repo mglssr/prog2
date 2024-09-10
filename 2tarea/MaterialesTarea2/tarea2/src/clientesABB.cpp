@@ -137,11 +137,41 @@ void removerTClienteTClientesABB(TClientesABB &clientesABB, int idCliente){
 }
 
 int cantidadClientesTClientesABB(TClientesABB clientesABB){
-    return 0;
+    if (clientesABB == NULL){
+        return 0;
+    }
+    else{
+        return (1 + cantidadClientesTClientesABB(clientesABB->izquierdo) + cantidadClientesTClientesABB(clientesABB->derecho));
+    }
+}
+
+int sumaedades(TClientesABB clientesABB){
+    int prom = 0;
+    if (clientesABB == NULL){
+        return prom;
+    }
+    else{
+        prom = edadTCliente(clientesABB->cliente) + edadPromedioTClientesABB(clientesABB->izquierdo) + edadPromedioTClientesABB(clientesABB->derecho);
+        return prom;
+    }
 }
 
 float edadPromedioTClientesABB(TClientesABB clientesABB){
-    return 0.;
+    if (clientesABB == NULL){
+        return 0;
+    }
+    else{
+        int cant = cantidadClientesTClientesABB(clientesABB);
+        int sum = sumaedades(clientesABB);
+        return (sum / cant); 
+    }
+    //if (clientesABB == NULL){
+    //    return prom;
+    //}
+    //else{
+    //    prom += edadTCliente(clientesABB->cliente) + edadPromedioTClientesABB(clientesABB->izquierdo) + edadPromedioTClientesABB(clientesABB->derecho);
+    //    return prom;
+    //}
 }
 
 TCliente obtenerNesimoClienteTClientesABB(TClientesABB clientesABB, int n){
