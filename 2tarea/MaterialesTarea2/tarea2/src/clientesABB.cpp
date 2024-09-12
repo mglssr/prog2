@@ -146,35 +146,41 @@ int cantidadClientesTClientesABB(TClientesABB clientesABB){
 }
 
 int sumaedades(TClientesABB clientesABB){
-    int prom = 0;
-    if (clientesABB == NULL){
-        return prom;
-    }
-    else{
-        prom = edadTCliente(clientesABB->cliente) + edadPromedioTClientesABB(clientesABB->izquierdo) + edadPromedioTClientesABB(clientesABB->derecho);
-        return prom;
-    }
-}
-
-float edadPromedioTClientesABB(TClientesABB clientesABB){
     if (clientesABB == NULL){
         return 0;
     }
-    else{
-        int cant = cantidadClientesTClientesABB(clientesABB);
-        int sum = sumaedades(clientesABB);
-        return (sum / cant); 
+    return edadTCliente(clientesABB->cliente) + sumaedades(clientesABB->izquierdo) + sumaedades(clientesABB->derecho);
+}
+
+float edadPromedioTClientesABB(TClientesABB clientesABB){
+    float cant = cantidadClientesTClientesABB(clientesABB);
+    if (cant == 0){
+        return 0;
     }
-    //if (clientesABB == NULL){
-    //    return prom;
-    //}
-    //else{
-    //    prom += edadTCliente(clientesABB->cliente) + edadPromedioTClientesABB(clientesABB->izquierdo) + edadPromedioTClientesABB(clientesABB->derecho);
-    //    return prom;
-    //}
+    return (sumaedades(clientesABB) / cant);
+}
+
+//funcion auxiliar
+TCliente rec_contador(TClientesABB clientesABB, int n, int* contador){
+    if (clientesABB != NULL){
+        TCliente cliente = rec_contador(clientesABB->izquierdo, n, contador);
+
+        if(cliente != NULL){
+            return cliente;
+        }
+
+        (*contador)++;
+        
+        if (*contador == n){
+            return clientesABB->cliente;
+        }
+        return rec_contador(clientesABB->derecho, n, contador);
+    }
+    return NULL;
+    
 }
 
 TCliente obtenerNesimoClienteTClientesABB(TClientesABB clientesABB, int n){
-    return NULL;
+    int contador = 0;
+    return rec_contador(clientesABB, n, &contador);
 }
-
