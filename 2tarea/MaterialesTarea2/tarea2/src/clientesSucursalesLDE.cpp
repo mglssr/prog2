@@ -1,16 +1,26 @@
 #include "../include/clientesSucursalesLDE.h"
 
-struct rep_clientesSucursalesLDE {
-
+struct rep_ClientesSucursal {
+	int idSucursal;
+	TClientesABB info;
+	rep_ClientesSucursal *prev, *next;
 };
 
+struct rep_clientesSucursalesLDE {
+	rep_ClientesSucursal *head, *end;
+};
 
+typedef struct rep_ClientesSucursal *ClientesSucursal;
 TClientesSucursalesLDE crearTClientesSucursalesLDEVacia(){
 	return NULL;
 }
 
 void insertarClientesABBTClientesSucursalesLDE(TClientesSucursalesLDE clientesSucursalesLDE, TClientesABB clientesABB, int idSucursal){
-
+	if (clientesSucursalesLDE == NULL){
+		ClientesSucursal nueva = new rep_ClientesSucursal;
+		nueva->idSucursal = idSucursal;
+		nueva->idSucursal
+	}
 }
 
 void liberarTClientesSucursalesLDE(TClientesSucursalesLDE &clientesSucursalesLDE){
