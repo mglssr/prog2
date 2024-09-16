@@ -174,7 +174,61 @@ TClientesABB removerNesimoClientesSucursalesLDE(TClientesSucursalesLDE clientesS
 	return NULL;
 }
 
+struct rep_repetido{
+	int reps;
+	int idTCliente;
+};
+
+typedef struct rep_repetido* repetido;
+
+int contador_recurrencias(ClientesSucursal sucursarles, int id){
+	int rec = 1;
+	while (sucursarles != NULL){
+		if (existeTClienteTClientesABB(sucursarles->info, id)){
+			rec++;
+		}
+		sucursarles = sucursarles->sig;
+	}
+	return rec;
+}
+
+void recorre_arbol(ClientesSucursal sucursal, TClientesABB arbol, repetido &mas_rep){
+
+	int rec = 1;
+	TCliente cliente_max = maxIdTClienteTClientesABB(arbol);
+	int max = idTCliente(cliente_max);
+	for (int i = 1; i <= max; i++){
+		if (existeTClienteTClientesABB(arbol, i)){
+			rec = contador_recurrencias(sucursal, i);
+		}
+		if (rec > mas_rep->reps){
+			mas_rep->reps = rec;
+			mas_rep->idTCliente = i;
+		}
+		else if ((rec == mas_rep->reps) && (i < mas_rep->idTCliente)){
+			mas_rep->idTCliente = i;
+		}
+	}
+
+}
+
 TCliente clienteMasRepetido(TClientesSucursalesLDE clientesSucursalesLDE){
+	if (clientesSucursalesLDE == NULL || clientesSucursalesLDE->head == NULL){
+		return NULL;
+	}
+	ClientesSucursal copia = clientesSucursalesLDE->head;
+	repetido mas_rep = new rep_repetido;
+	mas_rep->idTCliente = mas_rep->reps = 1;
 	
-	return NULL;
+	while(copia != NULL){
+		TClientesABB arbol = copia->info;
+		if (arbol != NULL){
+			recorre_arbol(clientesSucursalesLDE->head, arbol, mas_rep);
+		}
+		copia = copia->sig;
+	}
+	TCliente cliente = obtenerTClienteTClientesABB(clientesSucursalesLDE->head->info, mas_rep->idTCliente);
+
+	delete(mas_rep);
+	return(cliente);
 }

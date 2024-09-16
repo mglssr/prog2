@@ -31,7 +31,6 @@ void imprimirTClientesABB(TClientesABB clientesABB){
         imprimirTClientesABB(clientesABB->derecho);
     }
 }
-
 //funcion auxiliar
 void liberarnodo(TClientesABB &nodo){
     liberarTCliente(nodo->cliente);
@@ -159,7 +158,6 @@ float edadPromedioTClientesABB(TClientesABB clientesABB){
     }
     return (sumaedades(clientesABB) / cant);
 }
-
 //funcion auxiliar
 TCliente rec_contador(TClientesABB clientesABB, int n, int* contador){
     if (clientesABB != NULL){
