@@ -146,7 +146,6 @@ TClientesABB removerNesimoClientesSucursalesLDE(TClientesSucursalesLDE clientesS
 	ClientesSucursal aux = clientesSucursalesLDE->head;
 	
 	if (n == 1){
-		//ClientesSucursal sig = clientesSucursalesLDE->head;
 		clientesSucursalesLDE->head = clientesSucursalesLDE->head->sig;
 		TClientesABB info = aux->info;
 		delete(aux);
@@ -212,6 +211,14 @@ void recorre_arbol(ClientesSucursal sucursal, TClientesABB arbol, repetido &mas_
 
 }
 
+TCliente buscarCliSucursales(ClientesSucursal sucursales, int id){
+	TCliente cliente = NULL;
+	while((cliente == NULL) && (sucursales->sig != NULL)){
+		cliente = obtenerTClienteTClientesABB(sucursales->info, id);
+		sucursales = sucursales->sig;
+	}
+	return cliente;
+}
 TCliente clienteMasRepetido(TClientesSucursalesLDE clientesSucursalesLDE){
 	if (clientesSucursalesLDE == NULL || clientesSucursalesLDE->head == NULL){
 		return NULL;
@@ -227,8 +234,7 @@ TCliente clienteMasRepetido(TClientesSucursalesLDE clientesSucursalesLDE){
 		}
 		copia = copia->sig;
 	}
-	TCliente cliente = obtenerTClienteTClientesABB(clientesSucursalesLDE->head->info, mas_rep->idTCliente);
-
+	TCliente cliente = buscarCliSucursales(clientesSucursalesLDE->head, mas_rep->idTCliente);
 	delete(mas_rep);
 	return(cliente);
 }
