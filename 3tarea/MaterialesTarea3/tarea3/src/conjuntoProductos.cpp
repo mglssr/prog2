@@ -6,29 +6,91 @@
 // identificadores que almacena.
 // Los identificadores que almacena el conjunto cumplen 0 <= id < cantMax
 struct rep_conjuntoProductos{
-
+    int tope, cantMax;
+    bool* productos;
 };
 
-TConjuntoProductos crearTConjuntoProductos(int cantMax){ return NULL; }
+TConjuntoProductos crearTConjuntoProductos(int cantMax){
+    TConjuntoProductos nuevoSet = new rep_conjuntoProductos;
+    nuevoSet->productos = new bool[cantMax];
+    nuevoSet->tope = 0;
+    nuevoSet->cantMax = cantMax;
+    for (int i = 0; i < cantMax; i++){
+        nuevoSet->productos[i] = false;
+    }
+    return nuevoSet;
+}
 
-void insertarTConjuntoProductos(TConjuntoProductos &conjuntoProductos, int idProducto){}
+void insertarTConjuntoProductos(TConjuntoProductos &conjuntoProductos, int idProducto){
+    if (idProducto < conjuntoProductos->cantMax && !(conjuntoProductos->productos[idProducto])){
+        conjuntoProductos->productos[idProducto] = true;
+        conjuntoProductos->tope += 1;
+    }
+}
 
-void imprimirTConjuntoProductos(TConjuntoProductos conjuntoProductos){}
+void imprimirTConjuntoProductos(TConjuntoProductos conjuntoProductos){
+    for (int i = 0; i < conjuntoProductos->cantMax; i++){
+        if (conjuntoProductos->productos[i]){
+            printf("%d ",i);
+        }
+    }
+    printf("\n");
+}
+void liberarTConjuntoProductos(TConjuntoProductos &conjuntoProductos){
+    delete[] conjuntoProductos->productos;
+    delete conjuntoProductos;
+    conjuntoProductos = NULL;
+}
 
-void liberarTConjuntoProductos(TConjuntoProductos &conjuntoProductos){}
+bool esVacioTConjuntoProductos(TConjuntoProductos conjuntoProductos){ return (conjuntoProductos->tope == 0); }
 
-bool esVacioTConjuntoProductos(TConjuntoProductos conjuntoProductos){ return false; }
+int cantidadTConjuntoProductos(TConjuntoProductos conjuntoProductos){ return conjuntoProductos->tope; }
 
-int cantidadTConjuntoProductos(TConjuntoProductos conjuntoProductos){ return 0; }
+int cantMaxTConjuntoProductos(TConjuntoProductos conjuntoProductos){ return conjuntoProductos->cantMax; }
 
-int cantMaxTConjuntoProductos(TConjuntoProductos conjuntoProductos){ return 0; }
+bool perteneceTConjuntoProductos(TConjuntoProductos conjuntoProductos, int idProducto){ 
+    if (idProducto < conjuntoProductos->cantMax && (conjuntoProductos->productos[idProducto])){
+        return conjuntoProductos->productos[idProducto]; 
+    }
+    return false;
+}
 
-bool perteneceTConjuntoProductos(TConjuntoProductos conjuntoProductos, int idProducto){ return false; }
+void borrarDeTConjuntoProductos(TConjuntoProductos &conjuntoProductos, int idProducto){
+    if (conjuntoProductos->productos[idProducto]){
+        conjuntoProductos->productos[idProducto] = false;
+        conjuntoProductos->tope -= 1;
+    }
+}
 
-void borrarDeTConjuntoProductos(TConjuntoProductos &conjuntoProductos, int idProducto){}
+TConjuntoProductos unionTConjuntoProductos(TConjuntoProductos conjuntoProductos1, TConjuntoProductos conjuntoProductos2){ 
+    TConjuntoProductos joinSet = crearTConjuntoProductos(conjuntoProductos1->cantMax);
+    for (int i = 0; i < conjuntoProductos1->cantMax; i++)
+    {
+        if (perteneceTConjuntoProductos(conjuntoProductos1, i) || perteneceTConjuntoProductos(conjuntoProductos2, i)){
+            insertarTConjuntoProductos(joinSet, i);
+        }
+    }
+    return joinSet;
+}
 
-TConjuntoProductos unionTConjuntoProductos(TConjuntoProductos conjuntoProductos1, TConjuntoProductos conjuntoProductos2){ return NULL; }
+TConjuntoProductos interseccionTConjuntoProductos(TConjuntoProductos conjuntoProductos1, TConjuntoProductos conjuntoProductos2){ 
+    TConjuntoProductos joinSet = crearTConjuntoProductos(conjuntoProductos1->cantMax);
+    for (int i = 0; i < conjuntoProductos1->cantMax; i++)
+    {
+        if (perteneceTConjuntoProductos(conjuntoProductos1, i) && perteneceTConjuntoProductos(conjuntoProductos2, i)){
+            insertarTConjuntoProductos(joinSet, i);
+        }
+    }
+    return joinSet;
+}
 
-TConjuntoProductos interseccionTConjuntoProductos(TConjuntoProductos conjuntoProductos1, TConjuntoProductos conjuntoProductos2){ return NULL; }
-
-TConjuntoProductos diferenciaTConjuntoProductos(TConjuntoProductos conjuntoProductos1, TConjuntoProductos conjuntoProductos2){ return NULL; }
+TConjuntoProductos diferenciaTConjuntoProductos(TConjuntoProductos conjuntoProductos1, TConjuntoProductos conjuntoProductos2){
+    TConjuntoProductos joinSet = crearTConjuntoProductos(conjuntoProductos1->cantMax);
+    for (int i = 0; i < conjuntoProductos1->cantMax; i++)
+    {
+        if ((perteneceTConjuntoProductos(conjuntoProductos1, i) && !(perteneceTConjuntoProductos(conjuntoProductos2, i))) &&(perteneceTConjuntoProductos(conjuntoProductos1, i) && !(perteneceTConjuntoProductos(conjuntoProductos2, i)))){
+            insertarTConjuntoProductos(joinSet, i);
+        }
+    }
+    return joinSet;
+ }
