@@ -45,12 +45,13 @@ TFecha fechaInicioTPromocion(TPromocion prom){ return prom->ini; }
 TFecha fechaFinTPromocion(TPromocion prom){ return prom->fin; }
 
 bool sonPromocionesCompatibles(TPromocion prom1, TPromocion prom2){
-    //if (prom1->productos && prom2->productos){
-        if (esVacioTConjuntoProductos(interseccionTConjuntoProductos(prom1->productos, prom2->productos))){return true;}
-        else{
-            if ((prom1->fin < prom2->ini) || (prom2->fin < prom1->ini)){return true;}
-            else {return false;}
-        }
-    //}
+
+    if (compararTFechas(prom1->fin, prom2->ini) == -1 || compararTFechas(prom2->fin, prom1->ini) == -1){return true;}
+    else{
+        TConjuntoProductos inter = interseccionTConjuntoProductos(prom1->productos, prom2->productos);
+        bool res = esVacioTConjuntoProductos(inter);
+        liberarTConjuntoProductos(inter);
+        if (res){return true;}
+    }
     return false;
 }

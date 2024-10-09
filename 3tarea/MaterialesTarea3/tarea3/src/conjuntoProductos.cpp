@@ -88,7 +88,7 @@ TConjuntoProductos diferenciaTConjuntoProductos(TConjuntoProductos conjuntoProdu
     TConjuntoProductos joinSet = crearTConjuntoProductos(conjuntoProductos1->cantMax);
     for (int i = 0; i < conjuntoProductos1->cantMax; i++)
     {
-        if ((perteneceTConjuntoProductos(conjuntoProductos1, i) && !(perteneceTConjuntoProductos(conjuntoProductos2, i))) &&(perteneceTConjuntoProductos(conjuntoProductos1, i) && !(perteneceTConjuntoProductos(conjuntoProductos2, i)))){
+        if ((perteneceTConjuntoProductos(conjuntoProductos1, i) && !(perteneceTConjuntoProductos(conjuntoProductos2, i)))){
             insertarTConjuntoProductos(joinSet, i);
         }
     }
