@@ -69,12 +69,23 @@ TPromocion obtenerPromocionTListaPromociones(TListaPromociones listaPromociones,
 }
 
 TListaPromociones obtenerPromocionesFinalizadas(TListaPromociones &listaPromociones,TFecha fecha) {                                               
-    TListaPromociones finalizadas = NULL;
+    TListaPromociones finalizadas = new rep_listaPromociones;
     if (listaPromociones != NULL){
+        // if (compararTFechas(fecha, fechaFinTPromocion(listaPromociones->promociones)) == 1){
+        //     agregarPromocionTListaPromociones(finalizadas, listaPromociones->promociones);
+        //     TListaPromociones aBorrar = listaPromociones;
+        //     listaPromociones = aBorrar->sig;
+        //     liberarTPromocion(aBorrar->promociones);
+        //     delete aBorrar;
+        // }
         TListaPromociones aux = listaPromociones;
+        //TListaPromociones finali = finalizadas;
         while(aux->sig != NULL){
             if (compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) == 1){
-                agregarPromocionTListaPromociones(finalizadas, aux->promociones);
+                TListaPromociones finali = new rep_listaPromociones;
+                finali->promociones = aux->promociones;
+                finali = finali->sig; 
+                // agregarPromocionTListaPromociones(finalizadas, aux->promociones);
                 if (aux->sig != NULL){
                     TListaPromociones aBorrar = aux->sig;
                     liberarTPromocion(aBorrar->promociones);
@@ -89,7 +100,29 @@ TListaPromociones obtenerPromocionesFinalizadas(TListaPromociones &listaPromocio
 }
 
 TListaPromociones obtenerPromocionesActivas(TListaPromociones &listaPromociones,TFecha fecha) {
-    TListaPromociones activas = NULL;
+    TListaPromociones activas = new rep_listaPromociones;
+    if (listaPromociones != NULL){
+        if (compararTFechas(fecha, fechaFinTPromocion(listaPromociones->promociones)) == -1){
+            agregarPromocionTListaPromociones(activas, listaPromociones->promociones);
+            TListaPromociones aBorrar = listaPromociones;
+            listaPromociones = aBorrar->sig;
+            liberarTPromocion(aBorrar->promociones);
+            delete aBorrar;
+        }
+        TListaPromociones aux = listaPromociones;
+        while(aux->sig != NULL){
+            if (compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) == -1){
+                agregarPromocionTListaPromociones(activas, aux->promociones);
+                    if (aux->sig != NULL){
+                        TListaPromociones aBorrar = aux->sig;
+                        liberarTPromocion(aBorrar->promociones);
+                        aux->sig = aBorrar->sig;
+                        delete aBorrar;
+                    }
+            }
+            aux = aux->sig;
+        }
+    }
     // if (listaPromociones != NULL){
     //     TListaPromociones aux = listaPromociones;
     //     while(aux->sig != NULL){
@@ -122,5 +155,5 @@ bool esCompatibleTListaPromociones(TListaPromociones listaPromociones,TPromocion
 }
 
 TListaPromociones unirListaPromociones(TListaPromociones listaPromociones1, TListaPromociones listaPromociones2) {
-                                       
+                                       return NULL;
 }
