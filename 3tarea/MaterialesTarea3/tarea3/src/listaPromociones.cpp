@@ -11,13 +11,13 @@ void agregarPromocionTListaPromociones(TListaPromociones &listaPromociones, TPro
     TFecha fecIni = fechaInicioTPromocion(promocion);
     TListaPromociones nueva = new rep_listaPromociones;
     nueva->promociones = promocion;
-    if (listaPromociones == NULL || compararTFechas(fechaFinTPromocion(listaPromociones->promociones), fecIni)== 1){
+    if (listaPromociones == NULL || compararTFechas(fechaInicioTPromocion(listaPromociones->promociones), fecIni)== 1){
         nueva->sig = listaPromociones;
         listaPromociones = nueva;
     }
     else{
         TListaPromociones aux = listaPromociones;
-        while(aux->sig != NULL && compararTFechas(fechaFinTPromocion(aux->sig->promociones), fecIni) == -1){
+        while(aux->sig != NULL && compararTFechas(fechaInicioTPromocion(aux->sig->promociones), fecIni) == -1){
             aux = aux->sig;
         }
         nueva->sig = aux->sig;
@@ -56,8 +56,7 @@ bool pertenecePromocionTListaPromociones(TListaPromociones listaPromociones, int
     return aux != NULL;
 }
 
-TPromocion obtenerPromocionTListaPromociones(TListaPromociones listaPromociones,
-                                             int idPromocion) {
+TPromocion obtenerPromocionTListaPromociones(TListaPromociones listaPromociones, int idPromocion) {                              
     TPromocion res = NULL;
     TListaPromociones iter = listaPromociones;
     while (iter != NULL && !res) {
@@ -69,23 +68,59 @@ TPromocion obtenerPromocionTListaPromociones(TListaPromociones listaPromociones,
     return res;
 }
 
-
-TListaPromociones obtenerPromocionesFinalizadas(TListaPromociones &listaPromociones,
-                                                TFecha fecha) {
-  return NULL;
+TListaPromociones obtenerPromocionesFinalizadas(TListaPromociones &listaPromociones,TFecha fecha) {                                               
+    TListaPromociones finalizadas = NULL;
+    if (listaPromociones != NULL){
+        TListaPromociones aux = listaPromociones;
+        while(aux->sig != NULL){
+            if (compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) == 1){
+                agregarPromocionTListaPromociones(finalizadas, aux->promociones);
+                if (aux->sig != NULL){
+                    TListaPromociones aBorrar = aux->sig;
+                    liberarTPromocion(aBorrar->promociones);
+                    aux->sig = aBorrar->sig;
+                    delete aBorrar;
+                }
+            }
+            aux = aux->sig;
+        }
+    }
+    return finalizadas;
 }
 
-TListaPromociones obtenerPromocionesActivas(TListaPromociones &listaPromociones,
-                                            TFecha fecha) {
-  return NULL;
+TListaPromociones obtenerPromocionesActivas(TListaPromociones &listaPromociones,TFecha fecha) {
+    TListaPromociones activas = NULL;
+    // if (listaPromociones != NULL){
+    //     TListaPromociones aux = listaPromociones;
+    //     while(aux->sig != NULL){
+    //         if (compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) == -1){
+    //             agregarPromocionTListaPromociones(activas, aux->promociones);
+    //             if (aux->sig != NULL){
+    //                 TListaPromociones aBorrar = aux->sig;
+    //                 liberarTPromocion(aBorrar->promociones);
+    //                 aux->sig = aBorrar->sig;
+    //                 delete aBorrar;
+    //             }
+    //         }
+    //         aux = aux->sig;
+    //     }
+    // }
+    return activas;
 }
 
-bool esCompatibleTListaPromociones(TListaPromociones listaPromociones,
-                                   TPromocion promocion) {
-  return false;
+bool esCompatibleTListaPromociones(TListaPromociones listaPromociones,TPromocion promocion) {
+    if (listaPromociones != NULL){
+        TListaPromociones aux = listaPromociones;
+        while (aux != NULL){
+            if (!sonPromocionesCompatibles(aux->promociones, promocion)){
+                return true;
+            }
+            aux = aux->sig;
+        }
+    }
+    return false;
 }
 
-TListaPromociones unirListaPromociones(TListaPromociones listaPromociones1,
-                                       TListaPromociones listaPromociones2) {
-  return NULL;
+TListaPromociones unirListaPromociones(TListaPromociones listaPromociones1, TListaPromociones listaPromociones2) {
+                                       
 }
