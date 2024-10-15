@@ -8,45 +8,27 @@ struct rep_listaPromociones {
 TListaPromociones crearTListaPromocionesVacia() { return NULL; }
 
 void agregarPromocionTListaPromociones(TListaPromociones &listaPromociones, TPromocion promocion) {
-    if (listaPromociones == NULL || compararTFechas(fechaInicioTPromocion(listaPromociones->promociones), fechaInicioTPromocion(promocion)) == 1) {
-        TListaPromociones nueva = new rep_listaPromociones;
-        nueva->promociones = promocion;
-        nueva->sig = listaPromociones;  // Conecta el nuevo nodo al inicio
+    TListaPromociones nueva = new rep_listaPromociones;
+    nueva->promociones = promocion;
+    nueva->sig = NULL;
+    if (listaPromociones == NULL){
         listaPromociones = nueva;
     }
     else {
-        TListaPromociones nueva = new rep_listaPromociones;
-        nueva->promociones = promocion;
-        TListaPromociones aux = listaPromociones;
-        while (aux->sig != NULL && compararTFechas(fechaInicioTPromocion(aux->sig->promociones), fechaInicioTPromocion(promocion)) == -1) {
-            aux = aux->sig;
+        if (compararTFechas(fechaInicioTPromocion(listaPromociones->promociones), fechaInicioTPromocion(promocion)) >= 0){
+            nueva->sig = listaPromociones;
+            listaPromociones = nueva;
         }
-        nueva->sig = aux->sig;
-        aux->sig = nueva;
-    } 
+        else{
+            TListaPromociones aux = listaPromociones;
+            while(aux->sig != NULL && compararTFechas(fechaInicioTPromocion(aux->sig->promociones), fechaInicioTPromocion(promocion)) == -1){
+                aux = aux->sig;
+            }
+            nueva->sig = aux->sig;
+            aux->sig = nueva;
+        } 
+    }
 }
-
-// void agregarPromocionTListaPromociones(TListaPromociones &listaPromociones, TPromocion promocion) {
-//     if (listaPromociones == NULL || compararTFechas(fechaInicioTPromocion(listaPromociones->promociones), fechaInicioTPromocion(promocion))== 1){
-//         TListaPromociones nueva = new rep_listaPromociones;
-//         nueva->promociones = promocion;
-//         nueva->sig = NULL;
-//         nueva->sig = listaPromociones;
-//         listaPromociones = nueva;
-
-//     }
-//     else{
-//         TListaPromociones nueva = new rep_listaPromociones;
-//         nueva->promociones = promocion;
-//         nueva->sig = NULL;
-//         TListaPromociones aux = listaPromociones;
-//         while(aux->sig != NULL && compararTFechas(fechaInicioTPromocion(aux->sig->promociones), fechaInicioTPromocion(promocion)) == -1){
-//             aux = aux->sig;
-//         }
-//         nueva->sig = aux->sig;
-//         aux->sig = nueva;
-//     } 
-// }
 
 void imprimirTListaPromociones(TListaPromociones listaPromociones) {
     TListaPromociones aux = listaPromociones;
@@ -189,36 +171,19 @@ bool esCompatibleTListaPromociones(TListaPromociones listaPromociones,TPromocion
 
 TListaPromociones unirListaPromociones(TListaPromociones listaPromociones1, TListaPromociones listaPromociones2) {
     TListaPromociones nueva = NULL;
-    TListaPromociones fin = nueva;
-    while (listaPromociones1 != NULL){
-
-        agregarPromocionTListaPromociones(fin, listaPromociones1->promociones);
-        fin = fin->sig;
-        listaPromociones1 = listaPromociones1->sig;
-    }
+    TListaPromociones fin = NULL;
     
-    // while (listaPromociones1 != NULL && listaPromociones2 != NULL){
-    //     TListaPromociones nodo = NULL;
-    //     if(idTPromocion(listaPromociones1->promociones) < idTPromocion(listaPromociones2->promociones)){
-    //         TListaPromociones nodo = new rep_listaPromociones;
-    //         nodo->promociones = listaPromociones1->promociones;
-    //         listaPromociones1 = listaPromociones1->sig;
-    //         nodo->sig = NULL;
-    //     }else {
-    //         TListaPromociones nodo = new rep_listaPromociones;
-    //         nodo->promociones = listaPromociones2->promociones;
-    //         listaPromociones2 = listaPromociones2->sig;
-    //         nodo->sig = NULL;
-    //     }
-        
-
-    //     if (nueva == NULL) {
-    //         nueva = nodo;
-    //         fin = nueva;
-    //     } else {
-    //         fin->sig = nodo;
-    //         fin = fin->sig;
-    //     }
-    // }
+    TListaPromociones aux1 = listaPromociones1;
+    TListaPromociones aux2 = listaPromociones2;
+    while (aux1 != NULL && aux2 != NULL){
+        if(idTPromocion(aux1->promociones) < idTPromocion(aux2->promociones)){
+            agregarPromocionTListaPromociones(fin, aux1->promociones);
+            aux1 = aux1->sig;
+        }else {
+            agregarPromocionTListaPromociones(fin, aux2->promociones);
+            aux2 = aux2->sig;
+        }
+        fin = fin->sig;
+    }
     return nueva;
 }

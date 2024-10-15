@@ -75,7 +75,11 @@ TConjuntoProductos unionTConjuntoProductos(TConjuntoProductos conjuntoProductos1
 
 TConjuntoProductos interseccionTConjuntoProductos(TConjuntoProductos conjuntoProductos1, TConjuntoProductos conjuntoProductos2){ 
     TConjuntoProductos joinSet = crearTConjuntoProductos(conjuntoProductos1->cantMax);
-    for (int i = 0; i < conjuntoProductos1->cantMax; i++)
+    int cantimax;
+    if (conjuntoProductos1->cantMax > conjuntoProductos2->cantMax){cantimax = conjuntoProductos1->cantMax; }
+    else {cantimax  = conjuntoProductos2->cantMax;}
+
+    for (int i = 0; i < cantimax; i++)
     {
         if (perteneceTConjuntoProductos(conjuntoProductos1, i) && perteneceTConjuntoProductos(conjuntoProductos2, i)){
             insertarTConjuntoProductos(joinSet, i);
