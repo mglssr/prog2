@@ -1,29 +1,52 @@
 #include "../include/listaPromociones.h"
 
 struct rep_listaPromociones {
-  TPromocion promociones;
   TListaPromociones sig;
+  TPromocion promociones;
 };
 
 TListaPromociones crearTListaPromocionesVacia() { return NULL; }
 
 void agregarPromocionTListaPromociones(TListaPromociones &listaPromociones, TPromocion promocion) {
-    TFecha fecIni = fechaInicioTPromocion(promocion);
-    TListaPromociones nueva = new rep_listaPromociones;
-    nueva->promociones = promocion;
-    if (listaPromociones == NULL || compararTFechas(fechaInicioTPromocion(listaPromociones->promociones), fecIni)== 1){
-        nueva->sig = listaPromociones;
+    if (listaPromociones == NULL || compararTFechas(fechaInicioTPromocion(listaPromociones->promociones), fechaInicioTPromocion(promocion)) == 1) {
+        TListaPromociones nueva = new rep_listaPromociones;
+        nueva->promociones = promocion;
+        nueva->sig = listaPromociones;  // Conecta el nuevo nodo al inicio
         listaPromociones = nueva;
     }
-    else{
+    else {
+        TListaPromociones nueva = new rep_listaPromociones;
+        nueva->promociones = promocion;
         TListaPromociones aux = listaPromociones;
-        while(aux->sig != NULL && compararTFechas(fechaInicioTPromocion(aux->sig->promociones), fecIni) == -1){
+        while (aux->sig != NULL && compararTFechas(fechaInicioTPromocion(aux->sig->promociones), fechaInicioTPromocion(promocion)) == -1) {
             aux = aux->sig;
         }
         nueva->sig = aux->sig;
         aux->sig = nueva;
-    }
+    } 
 }
+
+// void agregarPromocionTListaPromociones(TListaPromociones &listaPromociones, TPromocion promocion) {
+//     if (listaPromociones == NULL || compararTFechas(fechaInicioTPromocion(listaPromociones->promociones), fechaInicioTPromocion(promocion))== 1){
+//         TListaPromociones nueva = new rep_listaPromociones;
+//         nueva->promociones = promocion;
+//         nueva->sig = NULL;
+//         nueva->sig = listaPromociones;
+//         listaPromociones = nueva;
+
+//     }
+//     else{
+//         TListaPromociones nueva = new rep_listaPromociones;
+//         nueva->promociones = promocion;
+//         nueva->sig = NULL;
+//         TListaPromociones aux = listaPromociones;
+//         while(aux->sig != NULL && compararTFechas(fechaInicioTPromocion(aux->sig->promociones), fechaInicioTPromocion(promocion)) == -1){
+//             aux = aux->sig;
+//         }
+//         nueva->sig = aux->sig;
+//         aux->sig = nueva;
+//     } 
+// }
 
 void imprimirTListaPromociones(TListaPromociones listaPromociones) {
     TListaPromociones aux = listaPromociones;
@@ -35,13 +58,21 @@ void imprimirTListaPromociones(TListaPromociones listaPromociones) {
 }
 
 void liberarTListaPromociones(TListaPromociones &listaPromociones, bool liberarPromociones) {
-    TListaPromociones aux;
-    while (listaPromociones != NULL)
-    {
-        aux = listaPromociones;
+    TListaPromociones aux = listaPromociones;
+    if (aux != NULL){
+
         listaPromociones = listaPromociones->sig;
         liberarTPromocion(aux->promociones);
         delete aux;
+        if (liberarPromociones){
+            while (listaPromociones != NULL)
+            {
+                aux = listaPromociones;
+                listaPromociones = listaPromociones->sig;
+                liberarTPromocion(aux->promociones);
+                delete aux;
+            }
+        }
     }
 }
 
@@ -68,84 +99,126 @@ TPromocion obtenerPromocionTListaPromociones(TListaPromociones listaPromociones,
     return res;
 }
 
-TListaPromociones obtenerPromocionesFinalizadas(TListaPromociones &listaPromociones,TFecha fecha) {                                               
+TListaPromociones obtenerPromocionesFinalizadas(TListaPromociones &listaPromociones,TFecha fecha) {
     TListaPromociones finalizadas = NULL;
-    if (listaPromociones != NULL){
-        TListaPromociones aux = listaPromociones;
-        TListaPromociones prev = NULL;
-        
-        while(aux->sig != NULL){
-            if (compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) == 1){
-                TListaPromociones nuevo = new rep_listaPromociones;
-                nuevo->promociones = aux->promociones;
-                nuevo->sig = NULL; 
-                nuevo = finali->sig;
-                    TListaPromociones aBorrar = aux->sig;
-                    liberarTPromocion(aBorrar->promociones);
-                    aux->sig = aBorrar->sig;
-                    delete aBorrar;
-            }
-            else{
 
+    if (listaPromociones != NULL) {
+        TListaPromociones aux = listaPromociones;
+        TListaPromociones finfin = NULL;
+        TListaPromociones prev = NULL;
+
+        while (aux != NULL) {
+            if (compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) >= 0) {
+                TListaPromociones nodo = new rep_listaPromociones;
+                nodo->promociones = aux->promociones;
+                nodo->sig = NULL;
+
+                if (finalizadas == NULL) {
+                    finalizadas = nodo;
+                    finfin = finalizadas;
+                } else {
+                    finfin->sig = nodo;
+                    finfin = finfin->sig;
+                }
+
+                if (prev == NULL) {listaPromociones = aux->sig;} 
+                else {prev->sig = aux->sig;}
+
+                TListaPromociones aBorrar = aux;
+                aux = aux->sig;
+                delete aBorrar;
+            } else {
+                prev = aux;
                 aux = aux->sig;
             }
         }
     }
+
     return finalizadas;
 }
 
 TListaPromociones obtenerPromocionesActivas(TListaPromociones &listaPromociones,TFecha fecha) {
     TListaPromociones activas = NULL;
-    if (listaPromociones != NULL){
+    if (listaPromociones != NULL) {
+        
+        TListaPromociones ActAux = NULL;
         TListaPromociones aux = listaPromociones;
-        while(aux->sig != NULL){
-            if (compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) == -1){
-                TListaPromociones act = new rep_listaPromociones;
-                act->promociones = aux->promociones;
-                act->sig = NULL; 
-                act = act->sig;
-                        TListaPromociones aBorrar = aux->sig;
-                        liberarTPromocion(aBorrar->promociones);
-                        aux->sig = aBorrar->sig;
-                        delete aBorrar;
-            }
-            else{
-                aux = aux->sig;
+        TListaPromociones prev = NULL;
 
+        while (aux != NULL) {
+            if (((compararTFechas(fecha, fechaInicioTPromocion(aux->promociones))) >= 0) || 
+                ((compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) <= 0) &&
+                (compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) >= 0))){ 
+                
+                TListaPromociones nodo = new rep_listaPromociones;
+                nodo->promociones = aux->promociones;
+                nodo->sig = NULL;
+
+                if (activas == NULL) {
+                    activas = nodo;
+                    ActAux = activas;
+                } else {
+                    ActAux->sig = nodo;
+                    ActAux = ActAux->sig;
+                }
+
+                if (prev == NULL) {listaPromociones = aux->sig;}
+                else {prev->sig = aux->sig;}
+
+                TListaPromociones aBorrar = aux;
+                aux = aux->sig;
+                delete aBorrar;
+            
+            } else {
+                prev = aux;
+                aux = aux->sig;
             }
         }
     }
-    // if (listaPromociones != NULL){
-    //     TListaPromociones aux = listaPromociones;
-    //     while(aux->sig != NULL){
-    //         if (compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) == -1){
-    //             agregarPromocionTListaPromociones(activas, aux->promociones);
-    //             if (aux->sig != NULL){
-    //                 TListaPromociones aBorrar = aux->sig;
-    //                 liberarTPromocion(aBorrar->promociones);
-    //                 aux->sig = aBorrar->sig;
-    //                 delete aBorrar;
-    //             }
-    //         }
-    //         aux = aux->sig;
-    //     }
-    // }
+
     return activas;
 }
 
 bool esCompatibleTListaPromociones(TListaPromociones listaPromociones,TPromocion promocion) {
+    TListaPromociones aux = listaPromociones;
     if (listaPromociones != NULL){
-        TListaPromociones aux = listaPromociones;
-        while (aux != NULL){
-            if (!sonPromocionesCompatibles(aux->promociones, promocion)){
-                return true;
-            }
-            aux = aux->sig;
-        }
+        while (aux != NULL && sonPromocionesCompatibles(aux->promociones, promocion)){aux = aux->sig;}
     }
-    return false;
+    return aux == NULL;
 }
 
 TListaPromociones unirListaPromociones(TListaPromociones listaPromociones1, TListaPromociones listaPromociones2) {
-                                       return NULL;
+    TListaPromociones nueva = NULL;
+    TListaPromociones fin = nueva;
+    while (listaPromociones1 != NULL){
+
+        agregarPromocionTListaPromociones(fin, listaPromociones1->promociones);
+        fin = fin->sig;
+        listaPromociones1 = listaPromociones1->sig;
+    }
+    
+    // while (listaPromociones1 != NULL && listaPromociones2 != NULL){
+    //     TListaPromociones nodo = NULL;
+    //     if(idTPromocion(listaPromociones1->promociones) < idTPromocion(listaPromociones2->promociones)){
+    //         TListaPromociones nodo = new rep_listaPromociones;
+    //         nodo->promociones = listaPromociones1->promociones;
+    //         listaPromociones1 = listaPromociones1->sig;
+    //         nodo->sig = NULL;
+    //     }else {
+    //         TListaPromociones nodo = new rep_listaPromociones;
+    //         nodo->promociones = listaPromociones2->promociones;
+    //         listaPromociones2 = listaPromociones2->sig;
+    //         nodo->sig = NULL;
+    //     }
+        
+
+    //     if (nueva == NULL) {
+    //         nueva = nodo;
+    //         fin = nueva;
+    //     } else {
+    //         fin->sig = nodo;
+    //         fin = fin->sig;
+    //     }
+    // }
+    return nueva;
 }
