@@ -147,10 +147,8 @@ TListaPromociones obtenerPromocionesActivas(TListaPromociones &listaPromociones,
         TListaPromociones prev = NULL;
 
         while (aux != NULL) {
-            if (((compararTFechas(fecha, fechaInicioTPromocion(aux->promociones))) >= 0) || 
-                ((compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) <= 0) &&
+            if (((compararTFechas(fecha, fechaInicioTPromocion(aux->promociones))) >= 0) || ((compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) <= 0) &&
                 (compararTFechas(fecha, fechaFinTPromocion(aux->promociones)) >= 0))){ 
-                
                 TListaPromociones nodo = new rep_listaPromociones;
                 nodo->promociones = aux->promociones;
                 nodo->sig = NULL;
