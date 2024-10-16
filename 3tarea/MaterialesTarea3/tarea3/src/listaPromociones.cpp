@@ -26,7 +26,7 @@ void agregarPromocionTListaPromociones(TListaPromociones &listaPromociones, TPro
             }
             nueva->sig = aux->sig;
             aux->sig = nueva;
-        } 
+        }
     }
 }
 
@@ -40,23 +40,42 @@ void imprimirTListaPromociones(TListaPromociones listaPromociones) {
 }
 
 void liberarTListaPromociones(TListaPromociones &listaPromociones, bool liberarPromociones) {
-    TListaPromociones aux = listaPromociones;
-    if (aux != NULL){
-
+    while (listaPromociones != NULL) {
+        TListaPromociones aux = listaPromociones;
         listaPromociones = listaPromociones->sig;
-        liberarTPromocion(aux->promociones);
-        delete aux;
-        if (liberarPromociones){
-            while (listaPromociones != NULL)
-            {
-                aux = listaPromociones;
-                listaPromociones = listaPromociones->sig;
-                liberarTPromocion(aux->promociones);
-                delete aux;
-            }
+        
+        if (liberarPromociones) {
+            liberarTPromocion(aux->promociones);
         }
+        
+        delete aux;
     }
 }
+
+
+// void liberarTListaPromociones(TListaPromociones &listaPromociones, bool liberarPromociones) {
+//     if (listaPromociones != NULL){
+//         TListaPromociones aux;
+        
+//         if (liberarPromociones){
+//             while (listaPromociones != NULL)
+//             {
+//                 aux = listaPromociones;
+//                 liberarTPromocion(aux->promociones);
+//                 listaPromociones = listaPromociones->sig;
+//                 delete aux;
+//                 aux = NULL;
+//             }
+//         }
+//         else{
+//             aux = listaPromociones;
+//             liberarTPromocion(aux->promociones);
+//             listaPromociones = listaPromociones->sig;
+//             delete aux;
+//             aux = NULL;
+//         }
+//     }
+// }
 
 bool esVaciaTListaPromociones(TListaPromociones promociones) { return promociones == NULL; }
 
@@ -170,20 +189,29 @@ bool esCompatibleTListaPromociones(TListaPromociones listaPromociones,TPromocion
 }
 
 TListaPromociones unirListaPromociones(TListaPromociones listaPromociones1, TListaPromociones listaPromociones2) {
-    TListaPromociones nueva = NULL;
-    TListaPromociones fin = NULL;
+    TListaPromociones nueva = new rep_listaPromociones;
+    nueva = NULL;
+    TListaPromociones fin;
+    fin = nueva;
     
-    TListaPromociones aux1 = listaPromociones1;
-    TListaPromociones aux2 = listaPromociones2;
-    while (aux1 != NULL && aux2 != NULL){
-        if(idTPromocion(aux1->promociones) < idTPromocion(aux2->promociones)){
-            agregarPromocionTListaPromociones(fin, aux1->promociones);
-            aux1 = aux1->sig;
-        }else {
-            agregarPromocionTListaPromociones(fin, aux2->promociones);
-            aux2 = aux2->sig;
-        }
+    while (listaPromociones1 != NULL){
+        agregarPromocionTListaPromociones(fin, listaPromociones1->promociones);
+        listaPromociones1 = listaPromociones1->sig;
+        fin->sig = NULL;
         fin = fin->sig;
     }
+    // TListaPromociones aux1 = listaPromociones1;
+    // TListaPromociones aux2 = listaPromociones2;
+    // while (aux1 != NULL && aux2 != NULL){
+    //     if(compararTFechas(aux)){
+    //         agregarPromocionTListaPromociones(fin, aux1->promociones);
+
+    //         aux1 = aux1->sig;
+    //     }else {
+    //         agregarPromocionTListaPromociones(fin, aux2->promociones);
+    //         aux2 = aux2->sig;
+    //     }
+    //     fin = fin->sig;
+    // }
     return nueva;
 }

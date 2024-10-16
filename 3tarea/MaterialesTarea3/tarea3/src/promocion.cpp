@@ -45,7 +45,6 @@ TFecha fechaInicioTPromocion(TPromocion prom){ return prom->ini; }
 TFecha fechaFinTPromocion(TPromocion prom){ return prom->fin; }
 
 bool sonPromocionesCompatibles(TPromocion prom1, TPromocion prom2){
-
     if (compararTFechas(prom1->fin, prom2->ini) == -1 || compararTFechas(prom2->fin, prom1->ini) == -1){return true;}
     else{
         TConjuntoProductos inter = interseccionTConjuntoProductos(prom1->productos, prom2->productos);
@@ -54,4 +53,5 @@ bool sonPromocionesCompatibles(TPromocion prom1, TPromocion prom2){
         if (res){return true;}
     }
     return false;
-}
+ }
+
