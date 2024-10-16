@@ -1,6 +1,9 @@
 #include "../include/historial.h"
 
 struct rep_historial {
+    THistorial sig;
+    TListaPromociones pasadas, futuras, activas;
+    TFecha actual;
 };
 
 THistorial crearTHistorial(TFecha fecha) { return NULL; }

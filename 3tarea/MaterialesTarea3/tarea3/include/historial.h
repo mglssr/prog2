@@ -3,7 +3,6 @@
 
   Los elementos de tipo THistorial contiene las estructuras necesarias para
   gestionar el historial (o histórico) de promociones. Un tipo THistorial tiene:
-    - Un ConjuntoProductos con los productos del historial
     - Una Fecha que representa la fecha actual.
     - Una lista de promociones finalizadas.
     - Una lista de promociones activas.
@@ -31,7 +30,7 @@ THistorial crearTHistorial(TFecha fecha);
 void agregarPromocionTHistorial(THistorial historial, TPromocion promocion);
 
 // Agrega el producto pasado como parámetro a la promoción con id 'idPromo'
-// PRE: existen una producto en el historial con id 'idProducto'
+// PRE: No existe el producto (con 'idProducto') en la promoción del historial
 // PRE: existe una promoción en el historial con id 'idPromo'
 // La función es O(n) siendo n la máxima cantidad de promociones en las listas.
 void agregarProductoAPromocionTHistorial(THistorial historial,

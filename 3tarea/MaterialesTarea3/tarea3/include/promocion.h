@@ -55,6 +55,7 @@ TFecha fechaFinTPromocion(TPromocion prom);
 // Una promocion es compatible con otra si no comparten productos durante un mismo período de tiempo.
 // O de otra manera, no son compatibles si coinciden en el tiempo y además un mismo producto
 // es parte de ambas promociones.
+// Asuma que prom1 y prom2 contienen la misma cantidad maxima de productos.
 // La función es O(n) peor caso.
 bool sonPromocionesCompatibles(TPromocion prom1, TPromocion prom2);
 
