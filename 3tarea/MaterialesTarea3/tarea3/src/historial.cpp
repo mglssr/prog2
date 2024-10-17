@@ -23,10 +23,10 @@ void liberarTHistorial(THistorial &historial) {
     historial = NULL;
 }
 void agregarPromocionTHistorial(THistorial historial, TPromocion promocion) {
-    if (compararTFechas(fechaInicioTPromocion(promocion), historial->actual) > 0){
+    if (compararTFechas(fechaInicioTPromocion(promocion), historial->actual) >= 0){
         agregarPromocionTListaPromociones(historial->futuras, promocion);
     }
-    else if(compararTFechas(fechaFinTPromocion(promocion), historial->actual) <= 0){
+    else if(compararTFechas(fechaFinTPromocion(promocion), historial->actual) < 0){
         agregarPromocionTListaPromociones(historial->pasadas, promocion);
     }
     else{
@@ -53,25 +53,25 @@ void avanzarAFechaTHistorial(THistorial historial, TFecha fecha) {
     TListaPromociones pasadas, activas;
     liberarTFecha(historial->actual);
     historial->actual = fecha;
-    
+    //obtengo las finalizadas de activas y 
     TListaPromociones finalAct = obtenerPromocionesFinalizadas(historial->activas, fecha);
-    pasadas = unirListaPromociones(finalAct, historial->pasadas);
+    TListaPromociones finalFut = obtenerPromocionesFinalizadas(historial->futuras, fecha);
+    pasadas = unirListaPromociones(finalAct, finalFut);
+    TListaPromociones pasadasF = unirListaPromociones(pasadas, historial->pasadas);
+    liberarTListaPromociones(pasadas, false);
     liberarTListaPromociones(historial->pasadas, false);
-    historial->pasadas = pasadas;
-    //liberarTListaPromociones(finalAct, false);
-    if (historial->activas){
-        TListaPromociones finalFut = obtenerPromocionesFinalizadas(historial->futuras, fecha);
-        historial->activas = unirListaPromociones(finalFut, historial->activas);
-        //liberarTListaPromociones(finalFut,false);
-    }
-    TListaPromociones finFut = obtenerPromocionesFinalizadas(historial->futuras, fecha);
-    historial->activas = unirListaPromociones(finFut, historial->activas);
+    historial->pasadas = pasadasF;
+    liberarTListaPromociones(finalAct, false);
+    //TListaPromociones finaliact = unirListaPromociones(finalFut, historial->activas);
+    //liberarTListaPromociones(finalFut,false);
+    // TListaPromociones finFut = obtenerPromocionesFinalizadas(historial->futuras, fecha);
+    // historial->activas = unirListaPromociones(finFut, historial->activas);
     //liberarTListaPromociones(finFut,false);
     TListaPromociones actFut = obtenerPromocionesActivas(historial->futuras, fecha);
     activas = unirListaPromociones(actFut, historial->activas);
+    liberarTListaPromociones(actFut, false);
     liberarTListaPromociones(historial->activas, false);
     historial->activas = activas;
-    liberarTListaPromociones(actFut, false);
 }
                                          
 
