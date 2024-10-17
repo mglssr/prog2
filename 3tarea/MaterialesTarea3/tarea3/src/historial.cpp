@@ -50,7 +50,28 @@ void agregarProductoAPromocionTHistorial(THistorial historial, TProducto product
 }
 
 void avanzarAFechaTHistorial(THistorial historial, TFecha fecha) {
+    TListaPromociones pasadas, activas;
+    liberarTFecha(historial->actual);
     historial->actual = fecha;
+    
+    TListaPromociones finalAct = obtenerPromocionesFinalizadas(historial->activas, fecha);
+    pasadas = unirListaPromociones(finalAct, historial->pasadas);
+    liberarTListaPromociones(historial->pasadas, false);
+    historial->pasadas = pasadas;
+    //liberarTListaPromociones(finalAct, false);
+    if (historial->activas){
+        TListaPromociones finalFut = obtenerPromocionesFinalizadas(historial->futuras, fecha);
+        historial->activas = unirListaPromociones(finalFut, historial->activas);
+        //liberarTListaPromociones(finalFut,false);
+    }
+    TListaPromociones finFut = obtenerPromocionesFinalizadas(historial->futuras, fecha);
+    historial->activas = unirListaPromociones(finFut, historial->activas);
+    //liberarTListaPromociones(finFut,false);
+    TListaPromociones actFut = obtenerPromocionesActivas(historial->futuras, fecha);
+    activas = unirListaPromociones(actFut, historial->activas);
+    liberarTListaPromociones(historial->activas, false);
+    historial->activas = activas;
+    liberarTListaPromociones(actFut, false);
 }
                                          
 
